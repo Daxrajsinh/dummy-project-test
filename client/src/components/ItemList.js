@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const baseURL = process.env.REACT_APP_BASE_URL || '';
+
 const ItemList = () => {
   const [items, setItems] = useState([]);
   const [itemName, setItemName] = useState('');
@@ -13,7 +15,7 @@ const ItemList = () => {
 
   const fetchItems = async () => {
     try {
-      const res = await axios.get('/api/items');
+      const res = await axios.get(`${baseURL}/api/items`);
       setItems(res.data);
       console.log('Fetched items:', res.data);
     } catch (err) {
@@ -23,7 +25,7 @@ const ItemList = () => {
 
   const addItem = async () => {
     try {
-      const res = await axios.post('/api/items', { name: itemName });
+      const res = await axios.post(`${baseURL}/api/items`, { name: itemName });
       setItems([...items, res.data]);
       setItemName('');
       console.log('Added item:', res.data);
@@ -35,7 +37,7 @@ const ItemList = () => {
   const deleteItem = async (id) => {
     try {
       console.log('Deleting item with id:', id);
-      await axios.delete(`/api/items/${id}`);
+      await axios.delete(`${baseURL}/api/items/${id}`);
       setItems(items.filter(item => item._id !== id));
       console.log('Deleted item with id:', id);
     } catch (err) {
@@ -46,7 +48,7 @@ const ItemList = () => {
   const updateItem = async () => {
     try {
       console.log('Updating item with id:', editItemId);
-      const res = await axios.put(`/api/items/${editItemId}`, { name: editItemName });
+      const res = await axios.put(`${baseURL}/api/items/${editItemId}`, { name: editItemName });
       setItems(items.map(item => (item._id === editItemId ? res.data : item)));
       setEditItemId(null);
       setEditItemName('');
